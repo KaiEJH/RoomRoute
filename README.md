@@ -10,8 +10,8 @@ You can follow [this freecodecamp.org guide](https://www.freecodecamp.org/news/n
 Node comes with Node Package Manager (NPM) installed. You use the following guide to install the relevant packages for this project.
 
 ## GIT
-GIT is used for version control but more importantly for us, code sharing. It allows multiple people to work on the same project and easily update code between different devices.
-Get GIT [here](https://git-scm.com/downloads/win). _(You can use default settings, but I recommend changing default editor to VSCode.)_
+GIT is used for version control but more importantly for us, code sharing. It allows multiple people to work on the same project and easily update code between different devices.  
+Get GIT [here](https://git-scm.com/downloads/win). _(You can use default settings, but I recommend changing default editor to VSCode.)_  
 [Basic Guide for GIT with VSCode](https://youtu.be/z5jZ9lrSpqk?si=wBEw1EyLUa6k_545&t=537)
 ### Setting Up GIT with your GitHub Account
 You can use whatever name you want associated with changes by using this command in the command prompt.
