@@ -18,7 +18,7 @@ You can use whatever name you want associated with changes by using this command
 ```
 git config --global user.name "username you want here. keep it professional"
 ```
-To bind it with your GitHub account, use the following command either with the email you used for GitHub signup, or if you have email privacy enabled, the one provided in your GitHub Settings under emails and primary email. _(Email Privacy is enabled by defualt)_
+To bind it with your GitHub account, use the following command either with the email you used for GitHub signup, or if you have email privacy enabled, the one provided in your GitHub Settings under emails and primary email. _(Email Privacy is enabled by default)_
 ```
 git config --global user.email "your-email@example.com"
 ```
