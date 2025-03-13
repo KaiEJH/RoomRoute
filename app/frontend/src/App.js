@@ -1,23 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import { Button,Typography } from '@mui/material';
+import Map from './components/Map';
+function App(){
+  const handleClick = () =>{
+    alert("You clicked the button!");
+  };
 
-function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Typography variant="h4" gutterBottom>
+        Still making this work.<br/> Haven't used MaterialUI before so it's a learning curve.<br/>This grid is custom so it should be the hardest part.
+      </Typography>
+      <Button variant="contained" onClick={handleClick}>
+        Test button
+      </Button>
+      <Map></Map>
     </div>
   );
 }

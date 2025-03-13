@@ -1,0 +1,15 @@
+.square {
+    width: 40px;
+    height: 40px;
+    background-color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border:1px solid black;
+    border-radius:8px;
+    transition:ease-in-out 0.3s;
+}
+.label-square{
+    border:none;
+    cursor:default;
+}
