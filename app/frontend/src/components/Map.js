@@ -11,7 +11,7 @@ function Map(){
     
     let grid = [];
 
-    for (let i=0; i<MAP_SIZE;i++){
+    for (let i=0; i<=MAP_SIZE;i++){
         let row = [];
 
         for (let j=0; j<=MAP_SIZE;j++){
