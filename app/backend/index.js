@@ -1,21 +1,20 @@
-const {MongoClient} = require("mongodb");//using to connect to mongo database
-require("dotenv").config();//makes .env file accessible, which has sensitive information not stored in repository
-const uri = process.env.MONGO_URI//pulls MONGO_URI from env file: Basically your unique access key that lets you connect to mongo
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
+const { connectDB } = require("./config/db");
+const roomRoutes = require("./routes/roomRoutes");
 
-const client = new MongoClient(uri);
+const app = express();
 
-async function run(){
-    try{
-        const database=client.db('RoomRoute');
-        const rooms = database.collection('samples');
+app.use(cors());
+app.use(express.json());
 
-        const query = {name:'SLT'};
-        const room = await rooms.findOne(query);
+app.use("/api/rooms", roomRoutes)
 
-        console.log(room);
-    } finally{
-        await client.close();
-    }
-}
+//connecting to DB and starting the server
 
-run().catch(console.dir);
+const PORT = 5000;
+
+connectDB().then(()=>{
+    app.listen(PORT,()=>console.log(`Server is running on port ${PORT}`));
+}).catch(err=>console.log("Failed to connect to database.",err));
