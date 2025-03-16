@@ -9,12 +9,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/rooms", roomRoutes)
+app.use("/api/rooms", roomRoutes);
 
 //connecting to DB and starting the server
 
-const PORT = 5000;
+const PORT = process.env.PORT;
 
-connectDB().then(()=>{
-    app.listen(PORT,()=>console.log(`Server is running on port ${PORT}`));
-}).catch(err=>console.log("Failed to connect to database.",err));
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+  })
+  .catch((err) => console.log("Failed to connect to database.", err));
