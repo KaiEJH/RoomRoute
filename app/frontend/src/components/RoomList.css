@@ -1,0 +1,27 @@
+.room-button {
+    justify-content: flex-start;
+    text-transform: none;
+    color: black !important;
+  }
+  
+  .room-button.selected {
+    background-color: #1976d2 !important;
+    color: black !important;
+  }
+  
+  .room-button.start-square {
+    background-color: #4caf50 !important;
+    color: black !important;
+  }
+  
+  .room-button.destination-square {
+    background-color: #f44336 !important;
+    color: black !important;
+  }
+  
+  /* Ensure scroll box works on small screens */
+  @media (max-width: 768px) {
+    .room-button {
+      font-size: 0.9rem;
+    }
+  }

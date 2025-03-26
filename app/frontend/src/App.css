@@ -1,38 +1,103 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+.app-container {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  position: relative;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.logo-text {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #d32f2f;
+  text-align: center;
+  flex: 1 1 100%;
+}
+
+.menu-button {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+}
+
+.map-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.map-box {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  max-width: 900px;
+}
+
+.button-group {
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
 }
 
-.App-link {
-  color: #61dafb;
+.map-button {
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  flex: 1 1 120px;
+  max-width: 200px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .logo-text {
+    font-size: 1.5rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .map-box {
+    padding: 0 1rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .map-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .logo-text {
+    font-size: 1.8rem;
+  }
+
+  .menu-button {
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .map-button {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+
+  .button-group {
+    flex-direction: column;
+    align-items: center;
   }
 }

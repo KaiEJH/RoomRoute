@@ -1,15 +1,32 @@
 .square {
-    width: 40px;
-    height: 40px;
-    background-color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    border:1px solid black;
-    border-radius:8px;
-    transition:ease-in-out 0.3s;
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 8px;
+  transition: ease-in-out 0.3s;
+  margin: 6px; 
 }
-.label-square{
-    border:none;
-    cursor:default;
+
+.label-square {
+  border: none;
+  cursor: default;
 }
+
+.selected {
+  background-color: #1976d2 !important;
+  color: white;
+}
+
+.start-square {
+    background-color: #4caf50 !important; /* green */
+    color: white;
+  }
+  
+  .destination-square {
+    background-color: #f44336 !important; /* red */
+    color: white;
+  }
