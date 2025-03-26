@@ -1,7 +1,8 @@
 import { Typography, List, ListItem, Button, Box, TextField } from "@mui/material";
 import { useState } from "react";
+import "./RoomList.css"; // 👈 Import your new stylesheet
 
-function RoomList({ rooms, selectedRoom, onSelectRoom }) {
+function RoomList({ rooms, selectedRoom, startRoom, destinationRoom, onSelectRoom }) {
   const [search, setSearch] = useState("");
 
   const filteredRooms = rooms.filter((room) => {
@@ -15,11 +16,6 @@ function RoomList({ rooms, selectedRoom, onSelectRoom }) {
 
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
-        Rooms List
-      </Typography>
-
-      {/* Search Input */}
       <TextField
         label="Search rooms"
         variant="outlined"
@@ -30,21 +26,30 @@ function RoomList({ rooms, selectedRoom, onSelectRoom }) {
         sx={{ mb: 2 }}
       />
 
-      {/* Scrollable list */}
       <Box sx={{ maxHeight: 240, overflowY: "auto" }}>
         <List>
-          {filteredRooms.map((room, index) => (
-            <ListItem key={index} disablePadding sx={{ mb: 1 }}>
-              <Button
-                variant={selectedRoom?.name === room.name ? "contained" : "outlined"}
-                onClick={() => onSelectRoom(room)}
-                fullWidth
-                sx={{ justifyContent: "flex-start", textTransform: "none" }}
-              >
-                {room.name}
-              </Button>
-            </ListItem>
-          ))}
+          {filteredRooms.map((room, index) => {
+            let classes = "room-button";
+            if (selectedRoom?.name === room.name) {
+              classes += " selected";
+            } else if (startRoom?.name === room.name) {
+              classes += " start-square";
+            } else if (destinationRoom?.name === room.name) {
+              classes += " destination-square";
+            }
+
+            return (
+              <ListItem key={index} disablePadding sx={{ mb: 1 }}>
+                <Button
+                  fullWidth
+                  onClick={() => onSelectRoom(room)}
+                  className={classes}
+                >
+                  {room.name}
+                </Button>
+              </ListItem>
+            );
+          })}
 
           {filteredRooms.length === 0 && (
             <Typography variant="body2" sx={{ p: 1, color: "text.secondary" }}>
@@ -54,7 +59,6 @@ function RoomList({ rooms, selectedRoom, onSelectRoom }) {
         </List>
       </Box>
 
-      {/* Selected room details */}
       {selectedRoom && (
         <Box sx={{ mt: 2 }}>
           <Typography variant="body2">

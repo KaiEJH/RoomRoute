@@ -1,15 +1,16 @@
-import { Grid, Typography, Button } from '@mui/material';
+import { Grid, Typography, Button, Box, Drawer, IconButton } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import { useState, useEffect } from 'react';
 import Map from './components/Map';
 import RoomList from './components/RoomList';
+import './App.css'; // <-- Styling script
 
 function App() {
   const [rooms, setRooms] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState(null);
-
-  const handleClick = () => {
-    alert("You clicked the button!");
-  };
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [startRoom, setStartRoom] = useState(null);
+  const [destinationRoom, setDestinationRoom] = useState(null);
 
   const handleSquareSelect = (id) => {
     const matchedRoom = rooms.find(
@@ -28,35 +29,68 @@ function App() {
   }, []);
 
   return (
-    <div style={{ padding: '2rem' }}>
-      {/* Top message and button */}
-      <Typography variant="h4" gutterBottom>
-        Still making this work.<br />
-        Haven't used MaterialUI before so it's a learning curve.<br />
-        This grid is custom so it should be the hardest part.
-      </Typography>
+    <div className="app-container">
+      <header className="header">
+        <Typography variant="h3" className="logo-text">
+          ClassCoords
+        </Typography>
+        <IconButton
+          className="menu-button"
+          onClick={() => setDrawerOpen(true)}
+          sx={{ position: 'absolute', right: '1rem' }}
+        >
+          <MenuIcon sx={{ fontSize: 32 }} />
+        </IconButton>
+      </header>
 
-      <Button variant="contained" onClick={handleClick}>
-        Test button
-      </Button>
+      <main className="map-section">
+        <Box className="map-box">
+        <Map
+          selectedRoom={selectedRoom}
+          onSquareSelect={handleSquareSelect}
+          startRoom={startRoom}
+          destinationRoom={destinationRoom}
+        />
+          <Box className="button-group">
+            <Button
+              variant="outlined"
+              className="map-button"
+              onClick={() => startRoom !== selectedRoom && setStartRoom(selectedRoom)}
+            >
+              Start
+            </Button>
+            <Button
+              variant="outlined"
+              className="map-button"
+              onClick={() => destinationRoom !== selectedRoom && setDestinationRoom(selectedRoom)}
+            >
+              Destination
+            </Button>
+          </Box>
+        </Box>
+      </main>
 
-      {/* Main layout: Map on left, Room list on right */}
-      <Grid container spacing={4} sx={{ marginTop: '2rem' }}>
-        <Grid item xs={8}>
-          <Map
-            selectedRoom={selectedRoom}
-            onSquareSelect={handleSquareSelect}
-          />
-        </Grid>
-
-        <Grid item xs={4}>
+      <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+        <Box
+          sx={{
+            width: { xs: 280, sm: 320 }, // responsive drawer width
+            padding: 2,
+            height: "100vh",
+            boxSizing: "border-box"
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Rooms List
+          </Typography>
           <RoomList
             rooms={rooms}
             selectedRoom={selectedRoom}
+            startRoom={startRoom}
+            destinationRoom={destinationRoom}
             onSelectRoom={setSelectedRoom}
           />
-        </Grid>
-      </Grid>
+        </Box>
+      </Drawer>
     </div>
   );
 }

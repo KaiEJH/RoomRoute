@@ -4,10 +4,12 @@ import Square from './Square';
 const MAP_SIZE = 10; // Can't be greater than 26 due to alphabet limitation
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-function Map({ selectedRoom, onSquareSelect }) {
+function Map({ selectedRoom, startRoom, destinationRoom, onSquareSelect }) {
   const selectedCoord = selectedRoom?.coordinates?.toUpperCase(); // e.g., "A4"
+  const startCoord = startRoom?.coordinates?.toUpperCase();
+  const destCoord = destinationRoom?.coordinates?.toUpperCase();
 
-  const handleSquareClick = (id) => {
+const handleSquareClick = (id) => {
     console.log(`Square ${id} clicked`);
     if (onSquareSelect) {
       onSquareSelect(id);
@@ -39,7 +41,11 @@ function Map({ selectedRoom, onSquareSelect }) {
             id={squareId}
             isLabel={isLabel}
             onClick={handleSquareClick}
-            className={`square ${isLabel ? "label-square" : ""} ${isSelected ? "selected" : ""}`}
+            className={`square ${isLabel ? "label-square" : ""}
+                ${isSelected ? "selected" : ""}
+                ${squareId === startCoord ? "start-square" : ""}
+                ${squareId === destCoord ? "destination-square" : ""}
+                `}
           >
             {content}
           </Square>
