@@ -3,6 +3,9 @@
 #ignores node modules, since saving all those files to repo would be dumb, expecially-
 #considering the package and package lock files allow you to install everything on a cloned repo by using 'npm install' in each folder that has a "package.json" file
 node_modules/
+
+#This configs people have on their own vscode editor 
+.vscode
 #System files that macOS and windows make sometimes that don't need to clog up repo
 .DS_Store
 Thumbs.db
