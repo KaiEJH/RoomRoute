@@ -3,7 +3,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useState, useEffect } from 'react';
 import Map from './components/Map';
 import RoomList from './components/RoomList';
-import './App.css'; // <-- Styling script
+import './App.css'; 
 
 function App() {
   const [rooms, setRooms] = useState([]);

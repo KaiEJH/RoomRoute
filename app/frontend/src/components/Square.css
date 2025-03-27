@@ -8,7 +8,7 @@
   border: 1px solid black;
   border-radius: 8px;
   transition: ease-in-out 0.3s;
-  margin: 6px; /* 🔥 Increased spacing (was 2px or 4px) */
+  margin: 6px; 
 }
 
 .label-square {
