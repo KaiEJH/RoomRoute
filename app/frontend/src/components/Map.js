@@ -1,4 +1,4 @@
-import { Grid as Grid2 } from '@mui/material';
+import { Grid2 } from '@mui/material';
 import Square from './Square';
 
 const MAP_SIZE = 10; // Can't be greater than 26 due to alphabet limitation

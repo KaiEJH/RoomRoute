@@ -1,9 +1,11 @@
-import { Grid, Typography, Button, Box, Drawer, IconButton } from '@mui/material';
+import { Typography, Button, Box, Drawer, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState, useEffect } from 'react';
 import Map from './components/Map';
 import RoomList from './components/RoomList';
 import './App.css'; 
+
+const DBPORT = process.env.REACT_APP_DBPORT;
 
 function App() {
   const [rooms, setRooms] = useState([]);
@@ -22,7 +24,7 @@ function App() {
   };
 
   useEffect(() => {
-    fetch('/api/rooms')
+    fetch(`http://localhost:${DBPORT}/api/rooms`)
       .then((res) => res.json())
       .then((data) => setRooms(data))
       .catch((err) => console.error('Failed to fetch rooms:', err));

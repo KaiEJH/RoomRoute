@@ -24,9 +24,9 @@
 .start-square {
     background-color: #4caf50 !important; /* green */
     color: white;
-  }
+}
   
-  .destination-square {
+.destination-square {
     background-color: #f44336 !important; /* red */
     color: white;
-  }
+}
