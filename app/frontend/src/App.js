@@ -14,6 +14,12 @@ function App() {
   const [startRoom, setStartRoom] = useState(null);
   const [destinationRoom, setDestinationRoom] = useState(null);
 
+  const buildingCells = new Set([
+    "A3", "A4", "A8", "A9", "A10", "B1", "B3", "B4", "B6", "B8", "B9", "B10", "C1", "C3", "C4", "C6", "C8", "C9", "C10",
+    "D1", "D3", "D4", "D6", "D8", "D9", "D10", "E1", "E6", "F1", "F3", "F10", "G1", "G3", "G10",
+    "H7", 'H8', "I2", "I4", "I5", "I7", "I8", "J2", "J3", "J4", "J7", "J8"
+  ]);
+
   const handleSquareSelect = (id) => {
     const matchedRoom = rooms.find(
       (room) => room.coordinates.toUpperCase() === id.toUpperCase()
@@ -54,20 +60,57 @@ function App() {
           destinationRoom={destinationRoom}
         />
           <Box className="button-group">
-            <Button
-              variant="outlined"
-              className="map-button"
-              onClick={() => startRoom !== selectedRoom && setStartRoom(selectedRoom)}
-            >
-              Start
-            </Button>
-            <Button
-              variant="outlined"
-              className="map-button"
-              onClick={() => destinationRoom !== selectedRoom && setDestinationRoom(selectedRoom)}
-            >
-              Destination
-            </Button>
+                    <Button
+            variant="outlined"
+            className="map-button"
+            onClick={() => {
+              if (!selectedRoom) return;
+              const coord = selectedRoom.coordinates.toUpperCase();
+              if (!buildingCells.has(coord)) {
+                alert("Only building cells can be set as Start.");
+                return;
+              }
+
+              // Handle collision with destination
+              if (destinationRoom?.coordinates.toUpperCase() === coord) {
+                const confirmSwitch = window.confirm("This cell is already set as Destination. Switch it to Start?");
+                if (confirmSwitch) {
+                  setDestinationRoom(null);
+                  setStartRoom(selectedRoom);
+                }
+              } else {
+                setStartRoom(selectedRoom);
+              }
+            }}
+          >
+            Start
+          </Button>
+
+          <Button
+            variant="outlined"
+            className="map-button"
+            onClick={() => {
+              if (!selectedRoom) return;
+              const coord = selectedRoom.coordinates.toUpperCase();
+              if (!buildingCells.has(coord)) {
+                alert("Only building cells can be set as Destination.");
+                return;
+              }
+
+              // Handle collision with start
+              if (startRoom?.coordinates.toUpperCase() === coord) {
+                const confirmSwitch = window.confirm("This cell is already set as Start. Switch it to Destination?");
+                if (confirmSwitch) {
+                  setStartRoom(null);
+                  setDestinationRoom(selectedRoom);
+                }
+              } else {
+                setDestinationRoom(selectedRoom);
+              }
+            }}
+          >
+            Destination
+          </Button>
           </Box>
         </Box>
       </main>
