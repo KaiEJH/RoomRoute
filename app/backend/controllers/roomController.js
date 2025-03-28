@@ -37,7 +37,7 @@ async function fetchRoomByAnyName(req,res){
 
 
 // Handles a request for adding a new room
-async function fetchAddRooms(req, res) {
+async function createRoom(req, res) {
     try {
         // Extract room data from the request body
         const { name, aliases = [], capacity, buildingName } = req.body;
@@ -54,4 +54,4 @@ async function fetchAddRooms(req, res) {
 }
 
 
-module.exports = {fetchRooms,fetchRoomByName,fetchRoomByAnyName, fetchAddRooms}
+module.exports = {fetchRooms,fetchRoomByName,fetchRoomByAnyName, createRoom}
