@@ -1,7 +1,7 @@
 const Snake = require('snake');
 const createGrid = require('./createGrid');
 const buildings = require('./buildingData');
-
+const gridSize = 10;
 
 function getBuildingByCell(cell) {
   return Object.entries(buildings).find(([_, { cells }]) => cells.includes(cell));
@@ -29,6 +29,12 @@ function runInternalNavigation(start, end) {
 
   return steps; // Can then be looped and solved via Snake
 }
+//Utility function for pathfinding
+//Converts to how snake reads coordinates from our top left 0,0 to their bottom left 0,0
+function coordConvertForSnake([x, y]) {
+  // Convert to bottom-left 0,0 to top-left 0,0
+  return [x, gridSize - 1 - y];
+}
 
 // THIS IS TO LET SNAKE SOLVE THE MAZE. THE ISSUE MAY INVOLVE THIS SECTION
 const runPathfinding = (start, end) => {
@@ -46,15 +52,19 @@ const runPathfinding = (start, end) => {
   const endIndex = coordToIndex(end);
 
   const grid = createGrid(startIndex, endIndex); // (SOMETHING WRONG WITH THIS LINE OR SOMETHING )
-
+  const snakeStartIndex=coordConvertForSnake(startIndex);
+  const snakeEndIndex=coordConvertForSnake(endIndex);
   const snake = new Snake();
   const result = snake.solve({
     maze: grid,
-    start: startIndex,
-    end: endIndex,
+    start: snakeStartIndex,
+    end: snakeEndIndex,
     heuristic: 'manhattan', //PROBABLY NEEDS TO BE CHANGED AT SOME POINT. NEED TO SOLVE THE ISSUE TO SEE WHICH METHOD WORKS BEST HERE
   });
-
+  //unsnakes route (converts from bottom right 0,0 to top left 0,0)
+  result.route.forEach(route => {
+    route[1] = gridSize - 1 - route[1];  // Modify the y-coordinate in place
+  });
   return result.route;
 };
 
