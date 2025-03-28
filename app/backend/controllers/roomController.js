@@ -2,7 +2,7 @@
 This file basically acts as a request handler, associated with the roomModel.js
 In this file all the res.x are essentially returns, with different kinds of returns 
 */
-const {getAllRooms,getRoomByName,getRoomByAnyName} = require("../models/roomModel");
+const {getAllRooms,getRoomByName,getRoomByAnyName,addRoom} = require("../models/roomModel");
 
 //Handles a request for all rooms
 async function fetchRooms(req,res){
@@ -35,4 +35,23 @@ async function fetchRoomByAnyName(req,res){
     }
 }
 
-module.exports = {fetchRooms,fetchRoomByName,fetchRoomByAnyName}
+
+// Handles a request for adding a new room
+async function fetchAddRooms(req, res) {
+    try {
+        // Extract room data from the request body
+        const { name, aliases = [], capacity, buildingName } = req.body;
+
+        // Call the addRoom function to add the new room
+        const roomId = await addRoom({ name, aliases, capacity, buildingName });
+
+        // Respond with the ID of the newly added room
+        res.status(201).json({ message: "Room added successfully", roomId });
+    } catch (err) {
+        // Send error response
+        res.status(500).json({ error: "Error adding room", details: err.message });
+    }
+}
+
+
+module.exports = {fetchRooms,fetchRoomByName,fetchRoomByAnyName, fetchAddRooms}

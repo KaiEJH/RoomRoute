@@ -21,6 +21,48 @@ async function getRoomByAnyName(someName){
     };
     
     return await db.collection("rooms").findOne(query);
+
 }
 
-module.exports={getAllRooms,getRoomByName,getRoomByAnyName};
+    // Adds a new room to the database, ensuring name and aliases are unique and valid
+    async function addRoom({ name, aliases = [], capacity, buildingName }) {
+        if (!name || !capacity || !buildingName) {
+            throw new Error("Name, capacity, and building name are required fields.");
+        }
+    
+        const db = getDB();
+    
+        // Check if the name or aliases already exist as a name or an alias
+        const existingConflict = await db.collection("rooms").findOne({
+            $or: [
+                { name: name }, // Check if the name already exists
+                { aliases: { $in: aliases } }, // Check if any of the aliases already exist
+                { name: { $in: aliases } }, // Check if any alias is used as a name
+                { aliases: { $in: [name] } }, // Check if the name is already used as an alias
+
+            ]
+        });
+    
+        if (existingConflict) {
+            throw new Error(
+                "Room name, one of the aliases, or an alias being used as a name already exists in the database."
+            );
+        }
+    
+        // Construct the new room object
+        const newRoom = {
+            name,
+            aliases,
+            capacity,
+            buildingName
+        };
+    
+        // Insert the new room into the collection
+        const result = await db.collection("rooms").insertOne(newRoom);
+        return result.insertedId; // Return the ID of the newly inserted record
+    }
+  
+
+
+
+module.exports={getAllRooms,getRoomByName,getRoomByAnyName,addRoom};
