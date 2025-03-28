@@ -3,6 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 const { connectDB } = require("./config/db");
 const roomRoutes = require("./routes/roomRoutes");
+const pathRoutes = require('./routes/pathRoutes');
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/rooms", roomRoutes);
+app.use("/api", pathRoutes);
 
 //connecting to DB and starting the server
 

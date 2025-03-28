@@ -8,7 +8,7 @@
   border: 1px solid black;
   border-radius: 8px;
   transition: ease-in-out 0.3s;
-  margin: 6px; 
+  margin: 6px;
 }
 
 .label-square {
@@ -16,17 +16,26 @@
   cursor: default;
 }
 
+/* Grey by default for building cells */
+.building-cell {
+  background-color: #ccc;
+}
+
+/* 🔼 These override any background below */
 .selected {
   background-color: #1976d2 !important;
   color: white;
+  z-index: 1;
 }
 
 .start-square {
-    background-color: #4caf50 !important; /* green */
-    color: white;
+  background-color: green !important;
+  color: white;
+  z-index: 1;
 }
-  
+
 .destination-square {
-    background-color: #f44336 !important; /* red */
-    color: white;
+  background-color: red !important;
+  color: white;
+  z-index: 1;
 }
