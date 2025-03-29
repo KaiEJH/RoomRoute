@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Map from './components/Map';
 import RoomList from './components/RoomList';
 import './App.css';
+import { coordToIndex } from './components/startDestination';
+
 
 const DBPORT = process.env.REACT_APP_DBPORT;
 
@@ -23,12 +25,14 @@ function App() {
   });
 
   const buildingCells = new Set([
-    "A3", "A4", "A8", "A9", "A10", "B1", "B3", "B4", "B6", "B8", "B9", "B10", "C1", "C3", "C4", "C6", "C8", "C9", "C10",
-    "D1", "D3", "D4", "D6", "D8", "D9", "D10", "E1", "E6", "F1", "F3", "F10", "G1", "G3", "G10",
-    "H7", 'H8', "I2", "I4", "I5", "I7", "I8", "J2", "J3", "J4", "J7", "J8"
+    "A3", "A4", "A8", "A9", "A10", "B1", "B3", "B4", "B6", "B8", "B9", "B10",
+    "C1", "C3", "C4", "C6", "C8", "C9", "C10", "D1", "D3", "D4", "D6", "D8", "D9", "D10",
+    "E1", "E6", "F1", "F3", "F10", "G1", "G3", "G10", "H7", "H8", "I2", "I4", "I5", "I7", "I8", "J2", "J4", "J5", "J7", "J8"
   ]);
 
   const handleSquareSelect = (id) => {
+    if (!buildingCells.has(id)) return; 
+  
     const matchedRoom = rooms.find(
       (room) => room.coordinates.toUpperCase() === id.toUpperCase()
     );
@@ -44,6 +48,24 @@ function App() {
       .then((data) => setRooms(data))
       .catch((err) => console.error('Failed to fetch rooms:', err));
   }, []);
+
+  useEffect(() => {
+    if (!startRoom || !destinationRoom) return;
+  
+    const startCoord = startRoom.coordinates.toUpperCase();
+    const destCoord = destinationRoom.coordinates.toUpperCase();
+  
+    fetch(`http://localhost:${DBPORT}/api/path`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ start: startCoord, end: destCoord }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log('Path result:', data.route);
+      })
+      .catch(err => console.error('Error:', err));
+  }, [startRoom, destinationRoom]);
 
   // Handle input changes for the new room form
   const handleInputChange = (e) => {

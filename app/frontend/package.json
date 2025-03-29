@@ -17,6 +17,7 @@
     "react-script": "^2.0.5",
     "react-scripts": "^5.0.1",
     "resolve-url-loader": "^5.0.0",
+    "snake": "^0.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
