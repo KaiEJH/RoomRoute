@@ -5,7 +5,8 @@
 node_modules/
 
 #This configs people have on their own vscode editor 
-.vscode
+.vscode/
+.vs/
 #System files that macOS and windows make sometimes that don't need to clog up repo
 .DS_Store
 Thumbs.db
