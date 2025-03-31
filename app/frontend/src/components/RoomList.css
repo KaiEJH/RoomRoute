@@ -1,24 +1,24 @@
 .room-button {
-    justify-content: flex-start;
-    text-transform: none;
-    color: black !important;
-  }
-  
-  .room-button.selected {
-    background-color: #1976d2 !important;
-    color: black !important;
-  }
-  
-  .room-button.start-square {
-    background-color: #4caf50 !important;
-    color: black !important;
-  }
-  
-  .room-button.destination-square {
-    background-color: #f44336 !important;
-    color: black !important;
-  }
-  
+  text-transform: none !important;
+  justify-content: flex-start;
+  font-size: 0.9rem;
+}
+
+.selected {
+  background-color: #2196f3 !important;
+  color: white !important;
+}
+
+.start-square {
+  background-color: green !important;
+  color: white !important;
+}
+
+.destination-square {
+  background-color: red !important;
+  color: white !important;
+}
+
   /* Ensure scroll box works on small screens */
   @media (max-width: 768px) {
     .room-button {

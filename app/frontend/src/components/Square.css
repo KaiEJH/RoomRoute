@@ -1,41 +1,70 @@
 .square {
-  width: 40px;
-  height: 40px;
-  background-color: white;
+  width: calc(8vw);              /* scalable size based on screen width */
+  max-width: 40px;               /* prevent over-scaling on large screens */
+  min-width: 24px;               /* prevent under-scaling on small screens */
+  aspect-ratio: 1 / 1;           /* keep squares square */
+  border: 1px solid #ccc;
+  font-size: 0.75rem;
   display: flex;
-  justify-content: center;
   align-items: center;
-  border: 1px solid black;
-  border-radius: 8px;
-  transition: ease-in-out 0.3s;
-  margin: 6px;
+  justify-content: center;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease;
 }
 
+/* Small tweaks for labels */
 .label-square {
+  background-color: transparent;
   border: none;
-  cursor: default;
+  font-weight: bold;
+  color: #444;
+  font-size: 0.75rem;
 }
 
-/* Grey by default for building cells */
+.selected {
+  background-color: #2196f3;
+  color: white;
+}
+
+.start-square {
+  background-color: green;
+  color: white;
+}
+
+.destination-square {
+  background-color: red;
+  color: white;
+}
+
 .building-cell {
   background-color: #ccc;
 }
 
-/* 🔼 These override any background below */
-.selected {
-  background-color: #1976d2 !important;
-  color: white;
-  z-index: 1;
+.path-cell {
+  background-color: rgba(0, 255, 0, 0.3);
 }
 
-.start-square {
-  background-color: green !important;
-  color: white;
-  z-index: 1;
+
+/* High contrast mode styles */
+.high-contrast .square {
+  border: 1px solid #fff;
+  color: #fff;
 }
 
-.destination-square {
-  background-color: red !important;
-  color: white;
-  z-index: 1;
+.high-contrast .start-square {
+  background-color: #00ff00 !important; /* Bright green */
+}
+
+.high-contrast .destination-square {
+  background-color: #ff0000 !important; /* Bright red */
+  border: 2px solid #fff;
+}
+
+.high-contrast .path-square {
+  background-color: #ffff00 !important; /* Bright yellow */
+}
+
+.high-contrast .label-square {
+  font-weight: bold;
+  color: #fff !important;
 }

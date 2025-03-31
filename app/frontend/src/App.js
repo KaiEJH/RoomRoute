@@ -1,4 +1,4 @@
-import { Typography, Button, Box, Drawer, IconButton } from '@mui/material';
+import { Typography, Button, Box, Drawer, IconButton, List, ListItem, ListItemText, FormControlLabel, Switch } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState, useEffect } from 'react';
 import Map from './components/Map';
@@ -15,6 +15,13 @@ function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [startRoom, setStartRoom] = useState(null);
   const [destinationRoom, setDestinationRoom] = useState(null);
+  const [path, setPath] = useState([]);
+  const [drawerView, setDrawerView] = useState("menu");
+  const [menuOption, setMenuOption] = useState('rooms');
+  const [accessibility, setAccessibility] = useState({
+    highContrast: false,
+    largeText: false
+  });
 
   const buildingCells = new Set([
     "A3", "A4", "A8", "A9", "A10", "B1", "B3", "B4", "B6", "B8", "B9", "B10",
@@ -54,12 +61,24 @@ function App() {
       .then(res => res.json())
       .then(data => {
         console.log('Path result:', data.route);
+        if (!data || !data.route || data.route.length === 0) {
+          alert("No path found.");
+          setPath([]);
+          return;
+        }
+  
+        // Convert path to cell IDs (e.g. "B1")
+        const pathAsCellIds = data.route.map(([col, row]) => {
+          return `${String.fromCharCode(65 + col)}${row + 1}`;
+        });
+  
+        setPath(pathAsCellIds);
       })
       .catch(err => console.error('Error:', err));
   }, [startRoom, destinationRoom]);
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${accessibility.highContrast ? 'high-contrast' : ''} ${accessibility.largeText ? 'large-text' : ''}`}>
       <header className="header">
         <Typography variant="h3" className="logo-text">
           ClassCoords
@@ -75,12 +94,17 @@ function App() {
 
       <main className="map-section">
         <Box className="map-box">
-        <Map
-          selectedRoom={selectedRoom}
-          onSquareSelect={handleSquareSelect}
-          startRoom={startRoom}
-          destinationRoom={destinationRoom}
-        />
+        <div className="map-grid">
+          <div className="map-grid">
+            <Map
+              selectedRoom={selectedRoom}
+              onSquareSelect={handleSquareSelect}
+              startRoom={startRoom}
+              destinationRoom={destinationRoom}
+              path={path}
+            />
+          </div>
+        </div>
           <Box className="button-group">
                     <Button
             variant="outlined"
@@ -137,27 +161,106 @@ function App() {
         </Box>
       </main>
 
-      <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-        <Box
-          sx={{
-            width: { xs: 280, sm: 320 }, // responsive drawer width
-            padding: 2,
-            height: "100vh",
-            boxSizing: "border-box"
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Rooms List
-          </Typography>
-          <RoomList
+      <Drawer
+  anchor="right"
+  open={drawerOpen}
+  onClose={() => {
+    setDrawerOpen(false);
+    setDrawerView("menu");
+  }}
+>
+  <Box sx={{ width: 280, p: 2 }}>
+    {drawerView === "menu" && (
+      <>
+        <Typography variant="h6" gutterBottom>Menu</Typography>
+        <List>
+          <ListItem button onClick={() => setDrawerView("rooms")}>
+            <ListItemText primary="Rooms List" />
+          </ListItem>
+          <ListItem button onClick={() => setDrawerView("favorites")}>
+            <ListItemText primary="Favorites" />
+          </ListItem>
+          <ListItem button onClick={() => setDrawerView("settings")}>
+            <ListItemText primary="Settings" />
+          </ListItem>
+          <ListItem button onClick={() => setDrawerView("help")}>
+            <ListItemText primary="Help & Info" />
+          </ListItem>
+        </List>
+      </>
+    )}
+
+    {drawerView === "rooms" && (
+      <>
+        <Typography variant="h6" gutterBottom>Rooms List</Typography>
+        <RoomList
             rooms={rooms}
             selectedRoom={selectedRoom}
             startRoom={startRoom}
             destinationRoom={destinationRoom}
             onSelectRoom={setSelectedRoom}
           />
-        </Box>
-      </Drawer>
+        <Button fullWidth onClick={() => setDrawerView("menu")} sx={{ mt: 2 }}>← Back to Menu</Button>
+      </>
+    )}
+
+    {drawerView === "favorites" && (
+      <>
+        <Typography variant="h6">Favorites</Typography>
+        <Typography variant="body2" color="text.secondary">Feature coming soon...</Typography>
+        <Button fullWidth onClick={() => setDrawerView("menu")} sx={{ mt: 2 }}>← Back to Menu</Button>
+      </>
+    )}
+
+    {drawerView === "settings" && (
+      <>
+        <Typography variant="h6">Settings</Typography>
+            <Box>
+              <Typography variant="h6">Accessibility</Typography>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={accessibility.highContrast}
+                    onChange={() =>
+                      setAccessibility(prev => ({
+                        ...prev,
+                        highContrast: !prev.highContrast
+                      }))
+                    }
+                  />
+                }
+                label="High Contrast Mode"
+              />
+
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={accessibility.largeText}
+                    onChange={() =>
+                      setAccessibility(prev => ({
+                        ...prev,
+                        largeText: !prev.largeText
+                      }))
+                    }
+                  />
+                }
+                label="Large Text"
+              />
+            </Box>
+        <Typography variant="body2" color="text.secondary">More configuration options coming soon.</Typography>
+        <Button fullWidth onClick={() => setDrawerView("menu")} sx={{ mt: 2 }}>← Back to Menu</Button>
+      </>
+    )}
+
+    {drawerView === "help" && (
+      <>
+        <Typography variant="h6">Help & Info</Typography>
+        <Typography variant="body2">Need help? This area will include quick tips.</Typography>
+        <Button fullWidth onClick={() => setDrawerView("menu")} sx={{ mt: 2 }}>← Back to Menu</Button>
+      </>
+    )}
+  </Box>
+</Drawer>
     </div>
   );
 }
