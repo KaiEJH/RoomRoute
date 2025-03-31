@@ -1,4 +1,4 @@
-import { Typography, Button, Box, Drawer, IconButton, List, ListItem, ListItemText, FormControlLabel, Switch, TextField } from '@mui/material';
+import { Typography, Button, Box, Drawer, IconButton, List, ListItem, ListItemText, FormControlLabel, Switch, TextField, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState, useEffect } from 'react';
 import Map from './components/Map';
@@ -25,10 +25,11 @@ function App() {
 
   // New state for the form inputs
   const [newRoom, setNewRoom] = useState({
+    coordinates: '',
     name: '',
     aliases: '',
     capacity: '',
-    buildingName: '',
+    building: '',
   });
 
   const buildingCells = new Set([
@@ -325,9 +326,9 @@ function App() {
             margin="normal"
           >
             {[...buildingCells].map((cell) => (
-              <ListItem key={cell} value={cell}>
+              <MenuItem key={cell} value={cell}>
                 {cell}
-              </ListItem>
+              </MenuItem>
             ))}
           </TextField>
           <TextField
@@ -365,9 +366,9 @@ function App() {
             margin="normal"
           >
             {buildingOptions.map((option) => (
-              <ListItem key={option} value={option}>
+              <MenuItem key={option} value={option}>
                 {option}
-              </ListItem>
+              </MenuItem>
             ))}
           </TextField>
           <Button
