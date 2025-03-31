@@ -1,5 +1,4 @@
-import { Typography, Button, Box, Drawer, IconButton, TextField } from '@mui/material';
-import { Typography, Button, Box, Drawer, IconButton, List, ListItem, ListItemText, FormControlLabel, Switch } from '@mui/material';
+import { Typography, Button, Box, Drawer, IconButton, List, ListItem, ListItemText, FormControlLabel, Switch, TextField } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState, useEffect } from 'react';
 import Map from './components/Map';
@@ -205,7 +204,101 @@ function App() {
         </Box>
 
         {/* Add Room Form */}
-        <Box className="add-room-form" sx={{ margin: 2 }}>
+        {/*<Box className="add-room-form" sx={{ margin: 2 }}>
+          <Typography variant="h6">Add a New Room</Typography>
+          <TextField
+            label="Name"
+            name="name"
+            value={newRoom.name}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Aliases (comma-separated)"
+            name="aliases"
+            value={newRoom.aliases}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Capacity"
+            name="capacity"
+            value={newRoom.capacity}
+            onChange={handleInputChange}
+            type="number"
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Building Name"
+            name="buildingName"
+            value={newRoom.buildingName}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+          <Button
+            variant="contained"
+            onClick={handleAddRoom}
+            sx={{ marginTop: 2 }}
+          >
+            Add Room
+          </Button>
+        </Box>*/}
+      </main>
+
+      <Drawer
+  anchor="right"
+  open={drawerOpen}
+  onClose={() => {
+    setDrawerOpen(false);
+    setDrawerView("menu");
+  }}
+>
+  <Box sx={{ width: 280, p: 2 }}>
+    {drawerView === "menu" && (
+      <>
+        <Typography variant="h6" gutterBottom>Menu</Typography>
+        <List>
+          <ListItem button onClick={() => setDrawerView("rooms")}>
+            <ListItemText primary="Rooms List" />
+          </ListItem>
+          <ListItem button onClick={() => setDrawerView("addrooms")}>
+            <ListItemText primary="Add Rooms" />
+          </ListItem>
+          <ListItem button onClick={() => setDrawerView("favorites")}>
+            <ListItemText primary="Favorites" />
+          </ListItem>
+          <ListItem button onClick={() => setDrawerView("settings")}>
+            <ListItemText primary="Settings" />
+          </ListItem>
+          <ListItem button onClick={() => setDrawerView("help")}>
+            <ListItemText primary="Help & Info" />
+          </ListItem>
+        </List>
+      </>
+    )}
+
+    {drawerView === "rooms" && (
+      <>
+        <Typography variant="h6" gutterBottom>Rooms List</Typography>
+        <RoomList
+            rooms={rooms}
+            selectedRoom={selectedRoom}
+            startRoom={startRoom}
+            destinationRoom={destinationRoom}
+            onSelectRoom={setSelectedRoom}
+          />
+        <Button fullWidth onClick={() => setDrawerView("menu")} sx={{ mt: 2 }}>← Back to Menu</Button>
+      </>
+    )}
+
+    {drawerView === "addrooms" && (
+          <>
+            <Typography variant="h6" gutterBottom>Add Rooms</Typography>
+            <Box className="add-room-form" sx={{ margin: 2 }}>
           <Typography variant="h6">Add a New Room</Typography>
           <TextField
             label="Name"
@@ -248,50 +341,9 @@ function App() {
             Add Room
           </Button>
         </Box>
-      </main>
-
-      <Drawer
-  anchor="right"
-  open={drawerOpen}
-  onClose={() => {
-    setDrawerOpen(false);
-    setDrawerView("menu");
-  }}
->
-  <Box sx={{ width: 280, p: 2 }}>
-    {drawerView === "menu" && (
-      <>
-        <Typography variant="h6" gutterBottom>Menu</Typography>
-        <List>
-          <ListItem button onClick={() => setDrawerView("rooms")}>
-            <ListItemText primary="Rooms List" />
-          </ListItem>
-          <ListItem button onClick={() => setDrawerView("favorites")}>
-            <ListItemText primary="Favorites" />
-          </ListItem>
-          <ListItem button onClick={() => setDrawerView("settings")}>
-            <ListItemText primary="Settings" />
-          </ListItem>
-          <ListItem button onClick={() => setDrawerView("help")}>
-            <ListItemText primary="Help & Info" />
-          </ListItem>
-        </List>
-      </>
-    )}
-
-    {drawerView === "rooms" && (
-      <>
-        <Typography variant="h6" gutterBottom>Rooms List</Typography>
-        <RoomList
-            rooms={rooms}
-            selectedRoom={selectedRoom}
-            startRoom={startRoom}
-            destinationRoom={destinationRoom}
-            onSelectRoom={setSelectedRoom}
-          />
-        <Button fullWidth onClick={() => setDrawerView("menu")} sx={{ mt: 2 }}>← Back to Menu</Button>
-      </>
-    )}
+            <Button fullWidth onClick={() => setDrawerView("menu")} sx={{ mt: 2 }}>← Back to Menu</Button>
+          </>
+        )}
 
     {drawerView === "favorites" && (
       <>
