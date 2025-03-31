@@ -37,11 +37,23 @@ function App() {
     "E1", "E6", "F1", "F3", "F10", "G1", "G3", "G10", "H7", "H8", "I2", "I4", "I5", "I7", "I8", "J2", "J4", "J5", "J7", "J8"
   ]);
 
+  const buildingOptions = [
+    "Teaching Complex 1",
+    "Faculty of Social Sciences",
+    "Teaching Complex 2",
+    "Campus IT Services",
+    "Faculty of Law",
+    "Administration Building",
+    "Faculty of Medicine",
+    "Faculty of Science and Technology",
+    "Faculty of Humanities"
+  ];
+
   const handleSquareSelect = (id) => {
     if (!buildingCells.has(id)) return; 
   
     const matchedRoom = rooms.find(
-      (room) => room.coordinates.toUpperCase() === id.toUpperCase()
+      (room) => room.coordinates && room.coordinates.toUpperCase() === id.toUpperCase()
     );
     if (matchedRoom) {
       setSelectedRoom(matchedRoom);
@@ -277,6 +289,9 @@ function App() {
           <ListItem button onClick={() => setDrawerView("help")}>
             <ListItemText primary="Help & Info" />
           </ListItem>
+          <ListItem button onClick={() => setDrawerView("genReport")}>
+            <ListItemText primary="Generate Report" />
+          </ListItem>
         </List>
       </>
     )}
@@ -300,6 +315,21 @@ function App() {
             <Typography variant="h6" gutterBottom>Add Rooms</Typography>
             <Box className="add-room-form" sx={{ margin: 2 }}>
           <Typography variant="h6">Add a New Room</Typography>
+          <TextField
+            select
+            label="Room Cell"
+            name="roomCell"
+            value={newRoom.coordinates}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          >
+            {[...buildingCells].map((cell) => (
+              <ListItem key={cell} value={cell}>
+                {cell}
+              </ListItem>
+            ))}
+          </TextField>
           <TextField
             label="Name"
             name="name"
@@ -326,13 +356,20 @@ function App() {
             margin="normal"
           />
           <TextField
+            select
             label="Building Name"
             name="buildingName"
-            value={newRoom.buildingName}
+            value={newRoom.building}
             onChange={handleInputChange}
             fullWidth
             margin="normal"
-          />
+          >
+            {buildingOptions.map((option) => (
+              <ListItem key={option} value={option}>
+                {option}
+              </ListItem>
+            ))}
+          </TextField>
           <Button
             variant="contained"
             onClick={handleAddRoom}
@@ -376,16 +413,30 @@ function App() {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={accessibility.largeText}
+                    checked={accessibility.toggleMap}
                     onChange={() =>
                       setAccessibility(prev => ({
                         ...prev,
-                        largeText: !prev.largeText
+                        toggleMap: !prev.toggleMap
                       }))
                     }
                   />
                 }
-                label="Large Text"
+                label="Toggle Map"
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={accessibility.toggleRoute}
+                    onChange={() =>
+                      setAccessibility(prev => ({
+                        ...prev,
+                        toggleRoute: !prev.toggleRoute
+                      }))
+                    }
+                  />
+                }
+                label="Toggle Route"
               />
             </Box>
         <Typography variant="body2" color="text.secondary">More configuration options coming soon.</Typography>
