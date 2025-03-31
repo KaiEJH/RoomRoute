@@ -12,10 +12,11 @@ const buildingCells = new Set([
 
 
 
-function Map({ selectedRoom, startRoom, destinationRoom, onSquareSelect }) {
+function Map({ selectedRoom, startRoom, destinationRoom, onSquareSelect, path }) {
   const selectedCoord = selectedRoom?.coordinates?.toUpperCase(); // e.g., "A4"
   const startCoord = startRoom?.coordinates?.toUpperCase();
   const destCoord = destinationRoom?.coordinates?.toUpperCase();
+  
 
   const handleSquareClick = (id) => {
     if (!buildingCells.has(id)) return;
@@ -35,6 +36,7 @@ function Map({ selectedRoom, startRoom, destinationRoom, onSquareSelect }) {
       const squareId = `${ALPHABET[j - 1]}${i}`; // e.g., A4
       const isSelected = squareId === selectedCoord;
       const isBuilding = buildingCells.has(squareId);
+      const isPath = path?.includes(squareId);
 
       if (i === 0 && j === 0) {
         content = ""; // empty top-left
@@ -54,6 +56,7 @@ function Map({ selectedRoom, startRoom, destinationRoom, onSquareSelect }) {
                 ${isSelected ? "selected" : ""}
                 ${squareId === startCoord ? "start-square" : ""}
                 ${squareId === destCoord ? "destination-square" : ""}
+                ${isPath ? "path-cell" : ""}
                 ${isBuilding ? "building-cell" : ""}
                 `}
           >
@@ -64,7 +67,7 @@ function Map({ selectedRoom, startRoom, destinationRoom, onSquareSelect }) {
     }
 
     grid.push(
-      <Grid2 container key={`row-${i}`} spacing={1} wrap="nowrap">
+      <Grid2 container key={`row-${i}`} spacing={0.25} wrap="nowrap" justifyContent="center">
         {row}
       </Grid2>
     );

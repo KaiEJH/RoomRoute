@@ -1,26 +1,30 @@
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f5f5f5;
+}
+
 .app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 .header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  position: relative;
-  flex-wrap: wrap;
-  width: 100%;
-  box-sizing: border-box;
+  padding: 0.5rem 1rem;
+  color: red;
 }
 
 .logo-text {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #d32f2f;
-  text-align: center;
-  flex: 1 1 100%;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .menu-button {
@@ -30,74 +34,108 @@
 }
 
 .map-section {
+  flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
+  flex-direction: column;
+  margin-top: 1rem;
 }
 
 .map-box {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.map-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.map-wrapper {
   width: 100%;
-  max-width: 900px;
+  display: flex;
+  justify-content: center;   /* center horizontally */
+  align-items: center;       /* optional for vertical centering */
+  padding: 0.5rem;
+  overflow-x: auto;
+  box-sizing: border-box;
 }
 
 .button-group {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
   margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
 .map-button {
-  padding: 0.5rem 1.5rem;
-  font-size: 1rem;
-  flex: 1 1 120px;
-  max-width: 200px;
+  flex: 1;
+  min-width: 120px;
 }
 
-/* Responsive tweaks */
-@media (max-width: 768px) {
-  .logo-text {
-    font-size: 1.5rem;
-  }
-
-  .map-box {
-    padding: 0 1rem;
-  }
-
-  .button-group {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .map-button {
-    width: 100%;
-  }
+/* High contrast mode */
+.high-contrast {
+  background-color: #000 !important;
+  color: #fff !important;
 }
 
-@media (max-width: 600px) {
-  .logo-text {
-    font-size: 1.8rem;
-  }
-
-  .menu-button {
-    top: 0.5rem;
-    right: 0.5rem;
-  }
+.high-contrast html, 
+.high-contrast body, 
+.high-contrast #root, 
+.high-contrast .app-container {
+  background-color: #000 !important;
+  color: #fff !important;
 }
 
+.high-contrast .header {
+  color: #fff !important;
+}
+
+.high-contrast .logo-text {
+  color: #fff !important;
+}
+
+.high-contrast .map-button {
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}
+
+.high-contrast .MuiDrawer-paper {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+.high-contrast .menu-button{
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+/* Large text mode */
+.large-text {
+  font-size: 1.2em;
+}
+
+
+/* Responsive behavior */
 @media (max-width: 600px) {
   .map-button {
     flex: 1 1 100%;
-    max-width: none;
+    font-size: 0.85rem;
   }
 
   .button-group {
     flex-direction: column;
-    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .room-button {
+    font-size: 0.85rem;
+  }
+
+  .logo-text {
+    font-size: 1.25rem;
   }
 }
