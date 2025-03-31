@@ -113,9 +113,14 @@ body, html, #root {
   color: #fff !important;
 }
 
-/* Large text mode */
-.large-text {
-  font-size: 1.2em;
+/*Hide Map*/
+.hide-map .map-grid {
+  display: none;
+}
+
+/*Hide Route*/
+.hide-route .route-display {
+  display: none;
 }
 
 

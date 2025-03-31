@@ -20,7 +20,8 @@ function App() {
   const [menuOption, setMenuOption] = useState('rooms');
   const [accessibility, setAccessibility] = useState({
     highContrast: false,
-    largeText: false
+    toggleMap: false,
+    toggleRoute: false,
   });
 
   // New state for the form inputs
@@ -134,7 +135,12 @@ function App() {
   };
 
   return (
-    <div className={`app-container ${accessibility.highContrast ? 'high-contrast' : ''} ${accessibility.largeText ? 'large-text' : ''}`}>
+    <div
+  className={`app-container 
+    ${accessibility.highContrast ? 'high-contrast' : ''} 
+    ${accessibility.toggleMap ? 'hide-map' : ''} 
+    ${accessibility.toggleRoute ? 'hide-route' : ''}`}
+>
       <header className="header">
         <Typography variant="h3" className="logo-text">
           ClassCoords
@@ -147,7 +153,7 @@ function App() {
           <MenuIcon sx={{ fontSize: 32 }} />
         </IconButton>
       </header>
-
+  
       <main className="map-section">
         <Box className="map-box">
         <div className="map-grid">
@@ -214,52 +220,11 @@ function App() {
               Destination
             </Button>
           </Box>
+          <Typography  className="route-display" variant="body2"
+    mt={2}
+    textAlign="center"
+    sx={{ wordBreak: 'break-word' }}>Route: {path.length > 0 ? path.join(' → ') : 'No path found'}</Typography>
         </Box>
-
-        {/* Add Room Form */}
-        {/*<Box className="add-room-form" sx={{ margin: 2 }}>
-          <Typography variant="h6">Add a New Room</Typography>
-          <TextField
-            label="Name"
-            name="name"
-            value={newRoom.name}
-            onChange={handleInputChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Aliases (comma-separated)"
-            name="aliases"
-            value={newRoom.aliases}
-            onChange={handleInputChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Capacity"
-            name="capacity"
-            value={newRoom.capacity}
-            onChange={handleInputChange}
-            type="number"
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Building Name"
-            name="buildingName"
-            value={newRoom.buildingName}
-            onChange={handleInputChange}
-            fullWidth
-            margin="normal"
-          />
-          <Button
-            variant="contained"
-            onClick={handleAddRoom}
-            sx={{ marginTop: 2 }}
-          >
-            Add Room
-          </Button>
-        </Box>*/}
       </main>
 
       <Drawer
@@ -326,9 +291,9 @@ function App() {
             margin="normal"
           >
             {[...buildingCells].map((cell) => (
-              <MenuItem key={cell} value={cell}>
+              <ListItem key={cell} value={cell}>
                 {cell}
-              </MenuItem>
+              </ListItem>
             ))}
           </TextField>
           <TextField
@@ -366,9 +331,9 @@ function App() {
             margin="normal"
           >
             {buildingOptions.map((option) => (
-              <MenuItem key={option} value={option}>
+              <ListItem key={option} value={option}>
                 {option}
-              </MenuItem>
+              </ListItem>
             ))}
           </TextField>
           <Button
