@@ -40,16 +40,27 @@ async function fetchRoomByAnyName(req,res){
 async function createRoom(req, res) {
     try {
         // Extract room data from the request body
-        const { name, aliases = [], capacity, buildingName } = req.body;
+        const { name, aliases = [], capacity, buildingName, coordinates } = req.body;
 
         // Call the addRoom function to add the new room
-        const roomId = await addRoom({ name, aliases, capacity, buildingName });
+        const roomId = await addRoom({ name, aliases, capacity, buildingName, coordinates });
 
         // Respond with the ID of the newly added room
         res.status(201).json({ message: "Room added successfully", roomId });
     } catch (err) {
         // Send error response
-        res.status(500).json({ error: "Error adding room", details: err.message });
+        if (err.message === "Alias already used.") {
+            res.status(400).json({ error: "Alias already used." });
+        } else if (err.message === "Room name already exists.") {
+            res.status(400).json({ error: "Room name already exists." });
+        } else if (err.message === "Alias Already used as a room name.") {
+            res.status(400).json({ error: "Alias Already used as a room name." });
+        } else if (err.message === "Room name already used as an alias.") {
+            res.status(400).json({ error: "Room name is already used as an alias." });
+        } else {
+            res.status(500).json({ error: "Error adding room", details: err.message });
+        }
+
     }
 }
 

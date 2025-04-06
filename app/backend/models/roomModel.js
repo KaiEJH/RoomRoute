@@ -25,28 +25,36 @@ async function getRoomByAnyName(someName){
 }
 
     // Adds a new room to the database, ensuring name and aliases are unique and valid
-    async function addRoom({ name, aliases = [], capacity, buildingName }) {
-        if (!name || !capacity || !buildingName) {
-            throw new Error("Name, capacity, and building name are required fields.");
+    async function addRoom({ name, aliases = [], capacity, buildingName, coordinates  }) {
+        if (!name || !capacity || !buildingName || !coordinates) {
+            throw new Error("Name, capacity, building name and Coordinates are required fields.");
         }
     
         const db = getDB();
     
-        // Check if the name or aliases already exist as a name or an alias
-        const existingConflict = await db.collection("rooms").findOne({
-            $or: [
-                { name: name }, // Check if the name already exists
-                { aliases: { $in: aliases } }, // Check if any of the aliases already exist
-                { name: { $in: aliases } }, // Check if any alias is used as a name
-                { aliases: { $in: [name] } }, // Check if the name is already used as an alias
 
-            ]
-        });
-    
-        if (existingConflict) {
-            throw new Error(
-                "Room name, one of the aliases, or an alias being used as a name already exists in the database."
-            );
+        // Check if the room name already exists
+        const existingRoom = await db.collection("rooms").findOne({ name: name },{ collation: { locale: "en", strength: 2 } });
+            if (existingRoom) {
+                throw new Error("Room name already exists.");
+            }
+
+        // Check if the alias name already exists if it is not empty
+        if ( aliases != "None" && aliases.length > 0 && aliases != "") { 
+        const existingAliases = await db.collection("rooms").findOne({ aliases: { $in: aliases }},{ collation: { locale: "en", strength: 2 } });
+            if (existingAliases) {
+                throw new Error("Alias already used.");
+            }
+        }
+            // Check if the alias name already exists as room name
+        const existingNameAsAlias = await db.collection("rooms").findOne({ name: { $in: aliases } },{ collation: { locale: "en", strength: 2 } });
+        if (existingNameAsAlias) {
+            throw new Error("Alias Already used as a room name.");
+        }
+            // Check if the room name already exists as alias name
+        const existingAliasAsName = await db.collection("rooms").findOne({ aliases: { $in: [name] } },{ collation: { locale: "en", strength: 2 } });
+        if (existingAliasAsName) {
+            throw new Error("Room name already used as an alias.");
         }
     
         // Construct the new room object
@@ -54,7 +62,8 @@ async function getRoomByAnyName(someName){
             name,
             aliases,
             capacity,
-            buildingName
+            buildingName,
+            coordinates
         };
     
         // Insert the new room into the collection

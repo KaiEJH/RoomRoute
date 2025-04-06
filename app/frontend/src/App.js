@@ -24,6 +24,10 @@ function App() {
     toggleRoute: false,
   });
 
+  
+const [message, setMessage] = useState(""); // Message content
+const [messageType, setMessageType] = useState(""); // "success" or "error"
+
   // New state for the form inputs
   const [newRoom, setNewRoom] = useState({
     coordinates: '',
@@ -50,6 +54,19 @@ function App() {
     "Faculty of Science and Technology",
     "Faculty of Humanities"
   ];
+
+  const coordinateMapping = {
+    "Teaching Complex 1": ["A3", "A4", "B3", "B4", "C3", "C4", "D3", "D4" ],
+    "Teaching Complex 2": ["B1", "C1", "D1", "E1", "F1", "G1"],
+    "Faculty of Science and Technology": ["A8", "A9", "A10", "B8", "B9", "B10", "C8", "C9", "C10", "D8", "D9", "D10"],
+    "Campus IT Services": ["F3", "G3"],
+    "Faculty of Law": ["I2", "J2"],
+    "Administration Building": ["I4", "I5", "J4", "J5"],
+    "Faculty of Medicine": ["B6", "C6", "D6", "E6"],
+    "Faculty of Social Sciences": ["H7", "H8", "I7", "I8", "J7", "J8"],
+    "Faculty of Humanities": ["F10", "G10"]
+    
+  };
 
   const handleSquareSelect = (id) => {
     if (!buildingCells.has(id)) return; 
@@ -110,29 +127,39 @@ function App() {
   };
 
   // Submit the new room to the server
-  const handleAddRoom = () => {
+const handleAddRoom = () => {
+    if (!newRoom.name || !newRoom.capacity || !newRoom.buildingName || !newRoom.coordinates) {
+        alert("Required fields are missing.");
+        return;
+    }
+
     fetch(`http://localhost:${DBPORT}/api/rooms/add-room`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...newRoom,
-        aliases: newRoom.aliases.split(',').map((alias) => alias.trim()), // Split aliases by comma
-        capacity: parseInt(newRoom.capacity, 10), // Convert capacity to a number
-      }),
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            ...newRoom,
+            aliases: newRoom.aliases.split(',').map(alias => alias.trim()),
+            capacity: parseInt(newRoom.capacity, 10),
+        }),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        alert('Room added successfully!');
-        setRooms((prevRooms) => [...prevRooms, data]); // Update the local rooms list
-        setNewRoom({ name: '', aliases: '', capacity: '', buildingName: '' }); // Reset the form
-      })
-      .catch((err) => {
-        console.error('Failed to add room:', err);
-        alert('Failed to add room.');
-      });
-  };
+        .then(async (res) => {
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error); // Capture specific error messages from the server
+            }
+            return res.json();
+        })
+        .then((data) => {
+            alert("Room added successfully!");
+            setRooms((prevRooms) => [...prevRooms, data]);
+            setNewRoom({ name: '', aliases: '', capacity: '', buildingName: '', coordinates: '' });
+        })
+        .catch((err) => {
+            alert(`Error: ${err.message}`); // Show errors as alerts
+        });
+};
 
   return (
     <div
@@ -281,21 +308,7 @@ function App() {
             <Typography variant="h6" gutterBottom>Add Rooms</Typography>
             <Box className="add-room-form" sx={{ margin: 2 }}>
           <Typography variant="h6">Add a New Room</Typography>
-          <TextField
-            select
-            label="Room Cell"
-            name="roomCell"
-            value={newRoom.coordinates}
-            onChange={handleInputChange}
-            fullWidth
-            margin="normal"
-          >
-            {[...buildingCells].map((cell) => (
-              <ListItem key={cell} value={cell}>
-                {cell}
-              </ListItem>
-            ))}
-          </TextField>
+          
           <TextField
             label="Name"
             name="name"
@@ -325,16 +338,38 @@ function App() {
             select
             label="Building Name"
             name="buildingName"
-            value={newRoom.building}
+            value={newRoom.buildingName}
             onChange={handleInputChange}
             fullWidth
             margin="normal"
           >
             {buildingOptions.map((option) => (
-              <ListItem key={option} value={option}>
+              <MenuItem key={option} value={option}>
                 {option}
-              </ListItem>
+              </MenuItem>
             ))}
+          </TextField>
+          <TextField
+            select
+            label="Coordinates"
+            name="coordinates"
+            value={newRoom.coordinates}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          >
+              {(() => {
+    // Filter coordinates based on selected building name
+    const availableCells = coordinateMapping[newRoom.buildingName] || []; // Default to an empty array if no building is selected
+
+
+    return availableCells.map((cell) => (
+      <MenuItem key={cell} value={cell}>
+        {cell} 
+      </MenuItem>
+    ));
+  })()}
+
           </TextField>
           <Button
             variant="contained"
