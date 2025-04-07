@@ -59,7 +59,7 @@ const runPathfinding = (start, end) => {
     maze: grid,
     start: snakeStartIndex,
     end: snakeEndIndex,
-    heuristic: 'depthFirst', //PROBABLY NEEDS TO BE CHANGED AT SOME POINT. NEED TO SOLVE THE ISSUE TO SEE WHICH METHOD WORKS BEST HERE
+    heuristic: 'linear', //PROBABLY NEEDS TO BE CHANGED AT SOME POINT. NEED TO SOLVE THE ISSUE TO SEE WHICH METHOD WORKS BEST HERE
   });
   //unsnakes route (converts from bottom right 0,0 to top left 0,0)
   result.route.forEach(route => {
