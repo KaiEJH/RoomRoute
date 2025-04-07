@@ -1,4 +1,5 @@
-import { Typography, Button, Box, Drawer, IconButton, List, ListItem, ListItemText, FormControlLabel, Switch, TextField, MenuItem } from '@mui/material';
+import { Typography, Button, Box, Drawer, IconButton, List, ListItem, ListItemText, FormControlLabel, Switch, TextField, MenuItem,Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // Optional for the expand icon
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState, useEffect } from 'react';
 import Map from './components/Map';
@@ -449,6 +450,147 @@ const handleAddRoom = () => {
       <>
         <Typography variant="h6">Help & Info</Typography>
         <Typography variant="body2">Need help? This area will include quick tips.</Typography>
+
+        <Accordion sx={{ mb: 1 }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="menu-content"
+        id="menu-header"
+      >
+        <Typography variant="h6" >How do you select a Start Destination?</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography variant="body2">
+        Click on a building cell on the map then click the start button.
+        </Typography>
+      </AccordionDetails>
+    </Accordion>
+
+    <Accordion sx={{ mb: 1 }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="menu-content"
+        id="menu-header"
+      >
+        <Typography variant="h6">How do you select an End Destination?</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography variant="body2">
+        Click on a building cell on the map then click the Destination button.
+        </Typography>
+      </AccordionDetails>
+    </Accordion>
+
+    <Accordion sx={{ mb: 1 }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="menu-content"
+        id="menu-header"
+      >
+        <Typography variant="h6">What does "Room List" do in the Menu?</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography variant="body2">
+        When a user selects a specific room its details are displayed Below the list of existing rooms meeting the search criteria. This provides comprehensive information pulled directly from the database regarding the selected room's record. 
+
+        </Typography>
+      </AccordionDetails>
+    </Accordion>
+
+
+    <Accordion sx={{ mb: 1 }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="menu-content"
+        id="menu-header"
+      >
+        <Typography variant="h6">What does "Add Rooms" do in the Menu?</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography variant="body2">
+        This feature allows users to register unlisted rooms into the database, associating them with the correct buildings and ensuring proper navigation and informational access. It is designed to maintain the integrity of data, prevent duplication, and provide comprehensive details about the room once it is successfully added to the database. 
+        </Typography>
+      </AccordionDetails>
+    </Accordion>
+
+
+
+    <Accordion sx={{ mb: 1 }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="menu-content"
+        id="menu-header"
+      >
+        <Typography variant="h6">What does "Favorites" do in the Menu?</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography variant="body2">
+        Users will have the access to save routes that they have navigated. This will allow them to reuse these routes quickly without having to manually enter them.
+        </Typography>
+      </AccordionDetails>
+    </Accordion>
+
+    <Accordion sx={{ mb: 1 }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="menu-content"
+        id="menu-header"
+      >
+        <Typography variant="h6">What does "Generate Report" do in the Menu?</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography variant="body2">
+        After planning or navigating different routes, users can generate a report of all rooms they travelled to and from. The route report will be displayed on screen
+        </Typography>
+      </AccordionDetails>
+    </Accordion>
+
+
+    <Accordion sx={{ mb: 1 }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="menu-content"
+        id="menu-header"
+      >
+        <Typography variant="h6">What does "High Contrast Mode" do in the Settings?</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography variant="body2">
+        High Contrast Mode: an accessibility feature that reduces and simplifies the colours of the UI elements to implement the use of a dark black background with white text for maximum contrast against the background to enhance readability for users with visual impairments. 
+        </Typography>
+      </AccordionDetails>
+    </Accordion>
+
+    <Accordion sx={{ mb: 1 }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="menu-content"
+        id="menu-header"
+      >
+        <Typography variant="h6">What does "Toggle Map" do in the Settings?</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography variant="body2">
+        An accessibility feature to allow for the map to be disabled on the home screen. This is expected to be especially useful for those with difficulty seeing, since the map feature may be more of a burden for them
+        </Typography>
+      </AccordionDetails>
+    </Accordion>
+
+    <Accordion sx={{ mb: 1 }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="menu-content"
+        id="menu-header"
+      >
+        <Typography variant="h6">What does "Toggle Route" do in the Settings?</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography variant="body2">
+        An accessibility feature to allow for the printed route sequence to be disabled on the home screen. This is expected to be useful for those with no difficulty seeing, since the route sequence has little use
+        </Typography>
+      </AccordionDetails>
+    </Accordion>
+
         <Button fullWidth onClick={() => setDrawerView("menu")} sx={{ mt: 2 }}>← Back to Menu</Button>
       </>
     )}
