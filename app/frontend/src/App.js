@@ -643,9 +643,7 @@ return availableCells.length > 0 ? (
               {/* 🟢 Recent Routes Component */}
               <RecentRoutesList
                     onSelect={(route) => {
-                      // Optional: you can update state, re-run pathfinding, etc.
                       console.log("Selected recent route:", route);
-                      // setStartRoom / setDestinationRoom / re-trigger path
                     }}
                   />
         </>
