@@ -113,6 +113,11 @@ body, html, #root {
   color: #fff !important;
 }
 
+.high-contrast .menu-box {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
 /*Hide Map*/
 .hide-map .map-grid {
   display: none;

@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Map from './components/Map';
 import RoomList from './components/RoomList';
 import './App.css';
+import { saveRecentRoute, getRecentRoutes } from './components/recentRoutes';
+import { saveFavorite, removeFavorite, isFavorite } from './components/favorites';
 import { coordToIndex } from './components/startDestination';
 
 
@@ -27,6 +29,8 @@ function App() {
   
 const [message, setMessage] = useState(""); // Message content
 const [messageType, setMessageType] = useState(""); // "success" or "error"
+
+const [route, setRoute] = useState([]);
 
   // New state for the form inputs
   const [newRoom, setNewRoom] = useState({
@@ -78,7 +82,101 @@ const [messageType, setMessageType] = useState(""); // "success" or "error"
       setSelectedRoom(matchedRoom);
     }
   };
+  const favoriteCandidate = {
+    start: (startRoom && startRoom.coordinates ? startRoom.coordinates.toUpperCase() : ''),
+    end: (destinationRoom && destinationRoom.coordinates ? destinationRoom.coordinates.toUpperCase() : '')
+  };
 
+  const isCurrentFavorite =
+  favoriteCandidate.start && favoriteCandidate.end
+    ? isFavorite(favoriteCandidate)
+    : false;
+
+  const RecentRoutesList = ({ onSelect }) => {
+    const [routes, setRoutes] = useState([]);
+    const [page, setPage] = useState(0);
+    const itemsPerPage = 3;
+  
+    useEffect(() => {
+      setRoutes(getRecentRoutes());
+    }, []);
+  
+    const totalPages = Math.ceil(routes.length / itemsPerPage);
+    const currentRoutes = routes.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+
+    return (
+      <Box>
+        {currentRoutes.length === 0 ? (
+          <Typography variant="body2" color="text.secondary">
+            No recent routes found.
+          </Typography>
+        ) : (
+          currentRoutes.map((route) => (
+            <Button
+              key={route.id}
+              fullWidth
+              variant="outlined"
+              sx={{ my: 1 }}
+              onClick={() => onSelect(route)}
+            >
+              {route.label || `${route.start} → ${route.end}`}
+            </Button>
+          ))
+        )}
+  
+        {/* Pagination buttons */}
+        {routes.length > itemsPerPage && (
+          <Box display="flex" justifyContent="space-between" mt={2}>
+            <Button
+              variant="text"
+              onClick={() => setPage((p) => Math.max(p - 1, 0))}
+              disabled={page === 0}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="text"
+              onClick={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
+              disabled={page >= totalPages - 1}
+            >
+              Next
+            </Button>
+          </Box>
+        )}
+      </Box>
+    );
+  };
+
+  const FavoriteRoutesList = ({ onSelect }) => {
+    const [favorites, setFavorites] = useState([]);
+  
+    useEffect(() => {
+      const stored = JSON.parse(localStorage.getItem('favoriteRoutes')) || [];
+      setFavorites(stored);
+    }, []);
+  
+    return (
+      <Box sx={{ mt: 2 }}>
+        {favorites.length === 0 ? (
+          <Typography variant="body2" color="text.secondary">
+            No favorite routes saved.
+          </Typography>
+        ) : (
+          favorites.map((route) => (
+            <Button
+              key={route.id}
+              fullWidth
+              variant="outlined"
+              sx={{ my: 1 }}
+              onClick={() => onSelect(route)}
+            >
+              {route.label || `${route.start} → ${route.end}`}
+            </Button>
+          ))
+        )}
+      </Box>
+    );
+  };
   // Fetch rooms from the backend
   useEffect(() => {
     fetch(`http://localhost:${DBPORT}/api/rooms`)
@@ -104,15 +202,24 @@ const [messageType, setMessageType] = useState(""); // "success" or "error"
         if (!data || !data.route || data.route.length === 0) {
           alert("No path found.");
           setPath([]);
+          setRoute([]);
           return;
         }
   
+      //Save to recent routes
+      saveRecentRoute({
+        start: startCoord,
+        end: destCoord,
+        label: `${startRoom.name} → ${destinationRoom.name}`,
+      });
+
         // Convert path to cell IDs (e.g. "B1")
         const pathAsCellIds = data.route.map(([col, row]) => {
           return `${String.fromCharCode(65 + col)}${row + 1}`;
         });
   
         setPath(pathAsCellIds);
+        setRoute(data.route.map(([x, y]) => ({ x, y })));
       })
       .catch(err => console.error('Error:', err));
   }, [startRoom, destinationRoom]);
@@ -120,6 +227,23 @@ const [messageType, setMessageType] = useState(""); // "success" or "error"
   // Handle input changes for the new room form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "capacity") {
+      // Allow empty value to let user delete back to blank
+      if (value === "") {
+        setNewRoom((prev) => ({ ...prev, capacity: "" }));
+        return;
+      }
+  
+      const parsed = parseInt(value, 10);
+  
+      // Enforce limits
+      if (parsed >= 0 && parsed <= 999) {
+        setNewRoom((prev) => ({ ...prev, capacity: parsed }));
+      }
+      return;
+    }
+
     setNewRoom((prevRoom) => ({
       ...prevRoom,
       [name]: value,
@@ -160,6 +284,15 @@ const handleAddRoom = () => {
             alert(`Error: ${err.message}`); // Show errors as alerts
         });
 };
+
+const handleFavorites = (route) => {
+  if(isFavorite(route)){
+    removeFavorite(route);
+  }
+  else{
+    saveFavorite(route);
+  }
+} 
 
   return (
     <div
@@ -262,7 +395,7 @@ const handleAddRoom = () => {
     setDrawerView("menu");
   }}
 >
-  <Box sx={{ width: 280, p: 2 }}>
+  <Box sx={{ width: 280, p: 2 }} >
     {drawerView === "menu" && (
       <>
         <Typography variant="h6" gutterBottom>Menu</Typography>
@@ -333,6 +466,7 @@ const handleAddRoom = () => {
             type="number"
             fullWidth
             margin="normal"
+            inputProps={{inputMode: 'numeric', min: 0, max: 999}}
           />
           <TextField
             select
@@ -360,14 +494,19 @@ const handleAddRoom = () => {
           >
               {(() => {
     // Filter coordinates based on selected building name
-    const availableCells = coordinateMapping[newRoom.buildingName] || []; // Default to an empty array if no building is selected
+    const availableCells = coordinateMapping[newRoom.buildingName] || [];
 
-
-    return availableCells.map((cell) => (
-      <MenuItem key={cell} value={cell}>
-        {cell} 
-      </MenuItem>
-    ));
+return availableCells.length > 0 ? (
+  availableCells.map((cell) => (
+    <MenuItem key={cell} value={cell}>
+      {cell}
+    </MenuItem>
+  ))
+) : (
+  <MenuItem disabled style={{ userSelect: 'none' }}>
+    Please Select Building Before Selecting Cells
+  </MenuItem>
+);
   })()}
 
           </TextField>
@@ -383,13 +522,58 @@ const handleAddRoom = () => {
           </>
         )}
 
-    {drawerView === "favorites" && (
-      <>
-        <Typography variant="h6">Favorites</Typography>
-        <Typography variant="body2" color="text.secondary">Feature coming soon...</Typography>
-        <Button fullWidth onClick={() => setDrawerView("menu")} sx={{ mt: 2 }}>← Back to Menu</Button>
-      </>
-    )}
+{drawerView === "favorites" && (
+  <>
+    <Typography variant="h6">Favorites</Typography>
+
+    <Typography variant="body2" color="text.secondary" mt={1}>
+      Current Route:
+    </Typography>
+    <Typography
+      className="route-display"
+      variant="body2"
+      mt={1}
+      textAlign="center"
+      sx={{ wordBreak: 'break-word' }}
+    >
+      Route: {path.length > 0 ? path.join(' → ') : 'No path found'}
+    </Typography>
+
+    <Button
+      variant="contained"
+      onClick={() => handleFavorites({
+        start: startRoom?.coordinates?.toUpperCase() || '',
+        end: destinationRoom?.coordinates?.toUpperCase() || '',
+        label: `${startRoom?.name} → ${destinationRoom?.name}`,
+        route: route
+      })}
+      disabled={!startRoom || !destinationRoom || route.length === 0}
+      sx={{ marginTop: 2 }}
+    >
+      {isFavorite({
+        start: startRoom?.coordinates?.toUpperCase() || '',
+        end: destinationRoom?.coordinates?.toUpperCase() || ''
+      }) ? 'Unfavorite' : 'Favorite'}
+    </Button>
+
+    <Typography variant="body2" mt={3}>Saved Favorites:</Typography>
+
+    <FavoriteRoutesList
+      onSelect={(route) => {
+        console.log("Selected favorite:", route);
+        // Optional: auto-fill start/destination and re-trigger path
+        const startMatch = rooms.find(r => r.coordinates.toUpperCase() === route.start);
+        const endMatch = rooms.find(r => r.coordinates.toUpperCase() === route.end);
+        if (startMatch) setStartRoom(startMatch);
+        if (endMatch) setDestinationRoom(endMatch);
+      }}
+    />
+
+    <Button fullWidth onClick={() => setDrawerView("menu")} sx={{ mt: 3 }}>
+      ← Back to Menu
+    </Button>
+  </>
+)}
 
     {drawerView === "settings" && (
       <>
@@ -452,6 +636,22 @@ const handleAddRoom = () => {
         <Button fullWidth onClick={() => setDrawerView("menu")} sx={{ mt: 2 }}>← Back to Menu</Button>
       </>
     )}
+
+  {drawerView === "genReport" && (
+        <>
+            <Typography variant="h6">Generate Report</Typography>
+              {/* 🟢 Recent Routes Component */}
+              <RecentRoutesList
+                    onSelect={(route) => {
+                      // Optional: you can update state, re-run pathfinding, etc.
+                      console.log("Selected recent route:", route);
+                      // setStartRoom / setDestinationRoom / re-trigger path
+                    }}
+                  />
+        </>
+      )}
+ 
+
   </Box>
 </Drawer>
     </div>

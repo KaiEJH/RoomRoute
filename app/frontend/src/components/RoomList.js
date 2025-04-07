@@ -8,9 +8,9 @@ function RoomList({ rooms, selectedRoom, startRoom, destinationRoom, onSelectRoo
   const filteredRooms = rooms.filter((room) => {
     const term = search.toLowerCase();
     return (
-      room.name.toLowerCase().includes(term) ||
-      room.building.toLowerCase().includes(term) ||
-      room.aliases.some(alias => alias.toLowerCase().includes(term))
+      (room.name?.toLowerCase() || '').includes(term) ||
+      (room.building?.toLowerCase() || '').includes(term) ||
+      (room.aliases || []).some(alias => (alias?.toLowerCase() || '').includes(term))
     );
   });
 
